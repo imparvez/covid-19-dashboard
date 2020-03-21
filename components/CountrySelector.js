@@ -1,0 +1,20 @@
+import React, { useState } from 'react';
+import useStats from '../utils/useStats';
+import Stats from './Stats';
+
+export default function CountrySelector() {
+    const countries = useStats('https://covid19.mathdro.id/api/countries');
+    const [selectedCountry, setSelectedCountry] = useState('IN');
+
+    if(!countries) return <div>Loading...</div>
+
+    return <div>
+        <h2>Currently Showing {selectedCountry}</h2>
+        <select onChange={(e) => setSelectedCountry(e.target.value)}>
+            {Object.entries(countries.countries).map(([country, code]) => {
+                return <option key={code} value={countries.iso3[code]}>{country}</option>;
+            })}
+        </select>
+        <Stats url={`https://covid19.mathdro.id/api/countries/${selectedCountry}`} />
+    </div>
+}
